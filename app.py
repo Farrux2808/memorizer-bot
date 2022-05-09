@@ -1,53 +1,81 @@
-from flask import Flask
-from flask import render_template, request
-import logging
 import telegram
-import os
-import requests
+from telegram.ext import Updater, MessageHandler, Filters
+from telegram.ext import CommandHandler
+from dictionary import get_info
 
-HOST = "https://memorizer-bot.herokuapp.com/"
+telegram_bot_token = 
 
-app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-global bot
-bot = telegram.Bot(token='5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag')
-botName = "Memorizerbot_bot" #Without @
+updater = Updater(token=telegram_bot_token, use_context=True)
+dispatcher = updater.dispatcher
 
 
-@app.route("/", methods=["POST", "GET"])
-def setWebhook():
-    if request.method == "GET":
-        logging.info("Hello, Telegram!")
-        print("Done")
-        return "OK, Telegram Bot!"
-    
-    
-
-@app.route("/verify", methods=["POST"])
-def verification():
-    if request.method == "POST":
-        update = telegram.Update.de_json(request.get_json(force=True),bot)
-        if update is None:
-            return "Show me your TOKEN please!"
-        logging.info("Calling {}".format(update.message))
-        handle_message(update.message)
-        return "ok"
+# set up the introductory statement for the bot when the /start command is invoked
+def start(update, context):
+    chat_id = update.effective_chat.id
+    context.bot.send_message(chat_id=chat_id, text="Hello there. Provide any English word and I will give you a bunch "
+                                                   "of information about it.")
 
 
-def handle_message(msg):
-    text = msg.text
-    print(msg)
-    # An echo bot
-    bot.sendMessage(chat_id=msg.chat.id, text=text)
+# obtain the information of the word provided and format before presenting.
+def get_word_info(update, context):
+    # get the word info
+    word_info = get_info(update.message.text)
 
+    # If the user provides an invalid English word, return the custom response from get_info() and exit the function
+    if word_info.__class__ is str:
+        update.message.reply_text(word_info)
+        return
 
-if __name__ == "__main__":
-    s = bot.setWebhook("{}/verify".format(HOST))
-    if s:
-        logging.info("{} WebHook Setup OK!".format(botName))
-    else:
-        logging.info("{} WebHook Setup Failed!".format(botName))
-    app.run(host= "0.0.0.0", debug=True)
+    # get the word the user provided
+    word = word_info['word']
 
-    
+    # get the origin of the word
+    origin = word_info['origin']
+    meanings = '\n'
+
+    synonyms = ''
+    definition = ''
+    example = ''
+    antonyms = ''
+
+    # a word may have several meanings. We'll use this counter to track each of the meanings provided from the response
+    meaning_counter = 1
+
+    for word_meaning in word_info['meanings']:
+        meanings += 'Meaning ' + str(meaning_counter) + ':\n'
+
+        for word_definition in word_meaning['definitions']:
+            # extract the each of the definitions of the word
+            definition = word_definition['definition']
+
+            # extract each example for the respective definition
+            if 'example' in word_definition:
+                example = word_definition['example']
+
+            # extract the collection of synonyms for the word based on the definition
+            for word_synonym in word_definition['synonyms']:
+                synonyms += word_synonym + ', '
+
+            # extract the antonyms of the word based on the definition
+            for word_antonym in word_definition['antonyms']:
+                antonyms += word_antonym + ', '
+
+        meanings += 'Definition: ' + definition + '\n\n'
+        meanings += 'Example: ' + example + '\n\n'
+        meanings += 'Synonym: ' + synonyms + '\n\n'
+        meanings += 'Antonym: ' + antonyms + '\n\n\n'
+
+        meaning_counter += 1
+
+    # format the data into a string
+    message = f"Word: {word}\n\nOrigin: {origin}\n{meanings}"
+
+    update.message.reply_text(message)
+
+# run the start function when the user invokes the /start command 
+dispatcher.add_handler(CommandHandler("start", start))
+
+# invoke the get_word_info function when the user sends a message 
+# that is not a command.
+dispatcher.add_handler(MessageHandler(Filters.text, get_word_info))
+updater.start_polling()
