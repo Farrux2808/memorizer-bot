@@ -1,0 +1,104 @@
+{
+    "update_id": 19220938,
+    "message": {
+        "new_chat_photo": [],
+        "photo": [],
+        "group_chat_created": false,
+        "contact": {
+            "last_name": "Xolikulov",
+            "first_name": "Farrux.BEK",
+            "phone_number": "+998939999047",
+            "user_id": 163899163
+        },
+        "supergroup_chat_created": false,
+        "delete_chat_photo": false,
+        "date": 1653588782,
+        "channel_chat_created": false,
+        "new_chat_members": [],
+        "reply_to_message": {
+            "new_chat_photo": [],
+            "photo": [],
+            "group_chat_created": false,
+            "supergroup_chat_created": false,
+            "delete_chat_photo": false,
+            "date": 1653587532,
+            "text": "To identify yourself,pls. send phone no",
+            "channel_chat_created": false,
+            "new_chat_members": [],
+            "message_id": 104,
+            "caption_entities": [],
+            "entities": [],
+            "chat": {
+                "username": "XolikulovFarruX",
+                "first_name": "Farrux.BEK",
+                "id": 163899163,
+                "last_name": "Xolikulov",
+                "type": "private"
+            },
+            "from": {
+                "is_bot": true,
+                "id": 5210098659,
+                "username": "Memorizerbot_bot",
+                "first_name": "Memorizer"
+            }
+        },
+        "message_id": 125,
+        "caption_entities": [],
+        "entities": [],
+        "chat": {
+            "username": "XolikulovFarruX",
+            "first_name": "Farrux.BEK",
+            "id": 163899163,
+            "last_name": "Xolikulov",
+            "type": "private"
+        },
+        "from": {
+            "is_bot": false,
+            "language_code": "en",
+            "id": 163899163,
+            "username": "XolikulovFarruX",
+            "last_name": "Xolikulov",
+            "first_name": "Farrux.BEK"
+        }
+    }
+}
+
+
+{
+    "message": {
+        "supergroup_chat_created": false,
+        "chat": {
+            "type": "private",
+            "username": "XolikulovFarruX",
+            "last_name": "Xolikulov",
+            "id": 163899163,
+            "first_name": "Farrux.BEK"
+        },
+        "text": "/start",
+        "message_id": 139,
+        "caption_entities": [],
+        "group_chat_created": false,
+        "date": 1653591256,
+        "new_chat_members": [],
+        "photo": [],
+        "entities": [
+            {
+                "type": "bot_command",
+                "length": 6,
+                "offset": 0
+            }
+        ],
+        "new_chat_photo": [],
+        "channel_chat_created": false,
+        "delete_chat_photo": false,
+        "from": {
+            "last_name": "Xolikulov",
+            "id": 163899163,
+            "language_code": "en",
+            "username": "XolikulovFarruX",
+            "first_name": "Farrux.BEK",
+            "is_bot": false
+        }
+    },
+    "update_id": 19220945
+}

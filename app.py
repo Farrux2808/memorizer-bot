@@ -1,41 +1,33 @@
+from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
 import telegram
-from telegram.ext import Updater, MessageHandler, Filters
-from telegram.ext import CommandHandler
-from PyDictionary import PyDictionary
+import commands
+from telegram.ext import CommandHandler, Dispatcher, Filters, MessageHandler
+app = Flask(__name__)
 
-dictionary=PyDictionary()
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://mrvirus:Pass_123@localhost/memorizer'
+# db = SQLAlchemy(app)
 
-telegram_bot_token = "5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag"
+global bot
+bot = telegram.Bot('5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag')
 
-updater = Updater(token=telegram_bot_token, use_context=True)
-dispatcher = updater.dispatcher
+@app.route('/data',methods=['POST','GET'])
+def get_data():
+    if request.method=='POST':
+        dp = Dispatcher(bot,None,workers=0)
 
+        update = telegram.Update.de_json(request.json,bot)
 
-# set up the introductory statement for the bot when the /start command is invoked
-def start(update, context):
-    chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id=chat_id, text="Hello there. Provide any English word and I will give you a bunch "
-                                                   "of information about it.")
+        dp.add_handler(CommandHandler('start', commands.start))
+        #   dp.add_handler(CommandHandler('translate', translate))
+        dp.add_handler(MessageHandler(Filters.text & ~Filters.command, commands.echo))
+        #   dp.add_handler(MessageHandler(Filters.location, callback=location_user))
 
+        dp.add_handler(MessageHandler(Filters.text, commands.echo))
+        dp.process_update(update)
+    bot.sendMessage(163899163, 'asfsdfsdfsd testeestsets')
+    return {'error':0}
 
-# obtain the information of the word provided and format before presenting.
-def get_word_info(update, context):
-    # get the word info
-    word_info = dictionary.meaning(update.message.text)
-    print(word_info)
-
-    # If the user provides an invalid English word, return the custom response from get_info() and exit the function
-    if word_info.__class__ is str:
-        update.message.reply_text(word_info)
-
-    message = f"text: {1+1}"
-
-    update.message.reply_text(message)
-
-# run the start function when the user invokes the /start command 
-dispatcher.add_handler(CommandHandler("start", start))
-
-# invoke the get_word_info function when the user sends a message 
-# that is not a command.
-dispatcher.add_handler(MessageHandler(Filters.text, get_word_info))
-updater.start_polling()
+if __name__ == '__main__':
+    s = bot.setWebhook("https://memorizer-bot.herokuapp.com/verify")
+    app.run(debug=True)
