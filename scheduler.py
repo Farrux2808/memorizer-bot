@@ -9,7 +9,7 @@ from telegram import (
 from app import db, updater
 from domain import UserRepository, User, Word, WordRepository
 import random
-
+import requests
 
 
 def quizCreater(client_id):
@@ -48,9 +48,9 @@ schedule.every(1).minutes.do(job)
 
 # bot = telegram.Bot(token="5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag")
 bot = updater.bot
+requests.post('http://127.0.0.1:5000/start')
 # mycursor = mydb.cursor()
 while True:
     schedule.run_pending()
     time.sleep(1)
-
 
