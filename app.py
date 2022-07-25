@@ -1,33 +1,47 @@
-from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
-import telegram
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+)
 import commands
-from telegram.ext import CommandHandler, Dispatcher, Filters, MessageHandler
+import menuHandler
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+
+# import redis
+
 app = Flask(__name__)
+telegram_bot_token = "5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag"
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://mrvirus:Pass_123@localhost/memorizer'
-# db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://mrvirus:Pass_123@localhost/memorizer'
+db = SQLAlchemy(app)
+# r = redis.Redis(
+#     host='localhost',
+#     port=6379)
+updater = Updater(token=telegram_bot_token, use_context=True)
 
-global bot
-bot = telegram.Bot('5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag')
+def main() -> None:
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler("start", commands.start))
+    dispatcher.add_handler(CommandHandler("quiz", commands.quiz))
+    # dispatcher.add_handler(CommandHandler("a", Contact))
+    # dispatcher.add_handler(PollHandler(commands.receive_quiz_answer, pass_chat_data=True, pass_user_data=True))
+    # dispatcher.add_handler(PollAnswerHandler(commands.receive_quiz_answer,  pass_chat_data=True, pass_user_data=True))
+    dispatcher.add_handler(MessageHandler(Filters.contact ,commands.contact_callback))
+    dispatcher.add_handler(MessageHandler(Filters.text ,menuHandler.menuHandler))
+    # dispatcher.add_handler(CommandHandler("Settings", commands.quiz))
+    updater.start_polling()
 
-@app.route('/data',methods=['POST','GET'])
+@app.route('/start',methods=['POST','GET'])
 def get_data():
-    if request.method=='POST':
-        dp = Dispatcher(bot,None,workers=0)
+    main()
+    # bot = threading.Thread(target=main)
+    # bot.start()
+    return { 
+        "error": 0
+    }
 
-        update = telegram.Update.de_json(request.json,bot)
-
-        dp.add_handler(CommandHandler('start', commands.start))
-        #   dp.add_handler(CommandHandler('translate', translate))
-        dp.add_handler(MessageHandler(Filters.text & ~Filters.command, commands.echo))
-        #   dp.add_handler(MessageHandler(Filters.location, callback=location_user))
-
-        dp.add_handler(MessageHandler(Filters.text, commands.echo))
-        dp.process_update(update)
-    bot.sendMessage(163899163, 'asfsdfsdfsd testeestsets')
-    return {'error':0}
-
-if __name__ == '__main__':
-    s = bot.setWebhook("https://memorizer-bot.herokuapp.com/verify")
+if __name__ == "__main__":
     app.run(debug=True)
+    
