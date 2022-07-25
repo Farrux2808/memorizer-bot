@@ -1,6 +1,8 @@
 from telegram.ext import (
     Updater,
     CommandHandler,
+    PollHandler,
+    PollAnswerHandler,
     MessageHandler,
     Filters,
 )

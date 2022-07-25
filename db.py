@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 
-url = 'mysql://mrvirus:Pass_123@localhost/memorizer'
+url = 'mysql://root:Pass_123@localhost/memorizer'
 
 def connect():
     global engine

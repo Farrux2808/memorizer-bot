@@ -1,5 +1,7 @@
 import schedule
 import time
+import telegram
+import commands
 import time
 from telegram import (
     Poll,
@@ -44,7 +46,8 @@ def job():
 
 schedule.every(1).minutes.do(job)
 
-bot = updater.dispatcher.bot
+# bot = telegram.Bot(token="5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag")
+bot = updater.bot
 # mycursor = mydb.cursor()
 while True:
     schedule.run_pending()
