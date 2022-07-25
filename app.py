@@ -16,7 +16,7 @@ from flask import Flask
 app = Flask(__name__)
 telegram_bot_token = "5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mariadb+pymysql://root:Pass_123@localhost/memorizer'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mariadb+pymysql://root:Pass_123@127.0.0.1/memorizer'
 db = SQLAlchemy(app)
 # r = redis.Redis(
 #     host='localhost',
