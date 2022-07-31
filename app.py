@@ -10,13 +10,14 @@ import commands
 import menuHandler
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-
+from dotenv import load_dotenv
 # import redis
+import os
 
 app = Flask(__name__)
-telegram_bot_token = "5210098659:AAEeJTWsjl_j9MyL598eR2iHXYLWieqwWag"
+telegram_bot_token = os.environ.get("BOT_TOKEN")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mariadb+pymysql://phpmyadmin:Pass_123@127.0.0.1/memorizer'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mariadb+pymysql://{os.environ.get("DB_USERNAME")}:{os.environ.get("DB_PASSWORD")}@127.0.0.1/memorizer'
 db = SQLAlchemy(app)
 # r = redis.Redis(
 #     host='localhost',

@@ -11,3 +11,4 @@ redis==4.3.4
 requests==2.27.1
 schedule==1.1.0
 SQLAlchemy==1.4.36
+python-dotenv==0.20.0
