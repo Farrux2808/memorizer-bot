@@ -1,13 +1,15 @@
-t = int(input())
-while(t):
-    n, m = map(int, input().split())
-    a = list(map(int, input().split()))
-    q = 1000000
-    for i in range(m):
-        x, y = map(int, input().split())
-        q = min(a[x-1], min(a[y-1], q))
-    if m % 2 == 0:
-        print(0)
-    else:
-        print(q)
-    t = t-14
+import string
+
+
+s = input()
+a = {}
+for i in string.ascii_uppercase:
+    a[i] = 0
+for char in s:
+    a[char] += 1
+
+
+n = len(s)
+for i in range(n-1):
+    for j in range(n-i-1):
+        
